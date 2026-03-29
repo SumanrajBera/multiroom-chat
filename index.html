@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi-room Chat Application</title>
+
+    <style>
+        .chatRoom {
+            width: 400px;
+            height: 200px;
+            overflow-y: auto;
+            border: 1px solid;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="roomSettings">
+        <h1>Room Setting</h1>
+        <div class="createRoom">
+            <input type="roomName" id="createText" placeholder="Enter room Name">
+            <button id="create">Create Room</button>
+        </div>
+        <div class="joinRoom">
+            <input type="roomName" id="joinText" placeholder="Enter room Name">
+            <button id="join">Join Room</button>
+        </div>
+    </div>
+
+    <h2>Chat Room</h2>
+    <div class="chatRoom">
+
+    </div>
+
+    <input type="text" id="chatText" placeholder="Enter your message">
+    <button id="chat">Send</button>
+
+    <script>
+        const join = document.querySelector("#join")
+        const create = document.querySelector("#create")
+        const chat = document.querySelector("#chat")
+        const createRoom = document.querySelector("#createText")
+        const joinRoom = document.querySelector("#joinText")
+        const chatText = document.querySelector("#chatText")
+
+        const ws = new WebSocket("ws://localhost:3000")
+
+        create.addEventListener("click", () => {
+            if (createRoom.value === "") return
+            ws.send(JSON.stringify({
+                type: "create",
+                room: createRoom.value
+            }))
+        })
+
+        join.addEventListener("click", () => {
+            if (joinRoom.value === "") return
+            ws.send(JSON.stringify({
+                type: "join",
+                room: joinRoom.value
+            }))
+        })
+
+        chat.addEventListener("click", () => {
+            ws.send(JSON.stringify({
+                type: "chat",
+                message: chatText.value
+            }))
+            console.log(chatText.value)
+        })
+
+        ws.onmessage = (data) => {
+            console.log(data)
+        }
+
+    </script>
+</body>
+
+</html>
