@@ -19,10 +19,17 @@
 <body>
     <div class="roomSettings">
         <h1>Room Setting</h1>
+        <!-- Setting Username -->
+        <div class="usernameGrp">
+            <input type="roomName" id="username" placeholder="Enter username">
+            <button id="setUsername">Set Username</button>
+        </div>
+        <!-- Setting Room name -->
         <div class="createRoom">
             <input type="roomName" id="createText" placeholder="Enter room Name">
             <button id="create">Create Room</button>
         </div>
+        <!-- Joining a room -->
         <div class="joinRoom">
             <input type="roomName" id="joinText" placeholder="Enter room Name">
             <button id="join">Join Room</button>
@@ -38,12 +45,15 @@
     <button id="chat">Send</button>
 
     <script>
+        // All the interactions
         const join = document.querySelector("#join")
         const create = document.querySelector("#create")
         const chat = document.querySelector("#chat")
+        const setUsername = document.querySelector("#setUsername")
         const createRoom = document.querySelector("#createText")
         const joinRoom = document.querySelector("#joinText")
         const chatText = document.querySelector("#chatText")
+        const username = document.querySelector("#username")
 
         const ws = new WebSocket("ws://localhost:3000")
 
@@ -71,7 +81,21 @@
             console.log(chatText.value)
         })
 
+        setUsername.addEventListener("click", () => {
+            if (username.value === "") return
+            ws.send(JSON.stringify({
+                type: "setUsername",
+                username: username.value
+            }))
+        })
+
         ws.onmessage = (data) => {
+            data = JSON.parse(data.data)
+            if (data.type === "createRoom") {
+                alert(data.message)
+            } else if (data.type === "joinRoom") {
+                alert(data.message)
+            }
             console.log(data)
         }
 
