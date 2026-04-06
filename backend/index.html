@@ -71,6 +71,7 @@
         const create = document.querySelector("#create")
         const chat = document.querySelector("#chat")
         const setUsername = document.querySelector("#setUsername")
+        const exitBtn = document.querySelector("#exit")
 
         // Input fields
         const createRoom = document.querySelector("#createText")
@@ -113,6 +114,10 @@
                 username: username.value
             }))
         })
+        
+        exitBtn.addEventListener("click", () => {
+            ws.close()
+        })
 
         function notify(type, data) {
             let p = document.createElement('p')
@@ -128,16 +133,35 @@
             chatRoom.appendChild(p)
         }
 
-        notify("error", "You are disconnected!")
+        function chatting(username, data) {
+            let p = document.createElement('p')
+            p.innerHTML = `<strong>${username}</strong>: ${data}`;
+            chatRoom.appendChild(p)
+        }
 
         ws.onmessage = (data) => {
             data = JSON.parse(data.data)
+            let status = data.status
             if (data.type === "createRoom") {
-                alert(data.message)
+                notify(status, data.message)
+                if (status === "success") exitBtn.removeAttribute("disabled")
+                else exitBtn.setAttribute("disabled")
             } else if (data.type === "joinRoom") {
-                alert(data.message)
+                notify(status, data.message)
+                if (status === "success") exitBtn.removeAttribute("disabled")
+                else exitBtn.setAttribute("disabled")
+            } else if (data.type === "setUsername") {
+                notify(status, data.message)
+            } else if (data.type === "chat") {
+                if (data.status !== "success") {
+                    notify(status, data.message)
+                    return
+                }
+                chatting(data.username, data.message)
+            } else if (data.type === "terminate") {
+                notify("error", data.message)
+                exitBtn.setAttribute("disabled")
             }
-            console.log(data)
         }
 
     </script>
