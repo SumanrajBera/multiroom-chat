@@ -17,53 +17,118 @@
             font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
         }
 
-        .chatRoom {
+        h1,
+        h2 {
+            text-align: center;
+            margin-block: .5rem;
+        }
+
+        input {
+            padding: .5rem;
+        }
+
+        .settings {
+            display: flex;
+
+            align-items: center;
+            flex-direction: column;
+            gap: .5rem;
+        }
+
+        .settings button,
+        #chat {
+            padding: .5rem;
+        }
+
+        .grp {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: .5rem;
+        }
+
+        .roomGrp {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: .5rem;
+        }
+
+        .chatWrapper {
             width: 400px;
             height: 200px;
-            overflow-y: auto;
-            border: 1px solid;
             position: relative;
+            border: 1px solid;
+            margin-inline: auto;
+            border-radius: .5rem;
+            padding: .5rem .2rem;
+        }
+
+        .chatRoom {
+            width: 100%;
+            height: 100%;
+            overflow-y: auto;
+        }
+
+        .chatGrp {
+            display: flex;
+            justify-content: center;
+            margin-top: .5rem;
         }
 
         #exit {
             position: absolute;
-            top: 0;
-            right: 0;
+            top: .5rem;
+            right: 1rem;
         }
 
         .notify {
             text-align: center;
+            font-style: italic;
         }
     </style>
 </head>
 
 <body>
     <div class="roomSettings">
-        <h1>Room Setting</h1>
-        <!-- Setting Username -->
-        <div class="usernameGrp">
-            <input type="roomName" id="username" placeholder="Enter username">
-            <button id="setUsername">Set Username</button>
-        </div>
-        <!-- Setting Room name -->
-        <div class="createRoom">
-            <input type="roomName" id="createText" placeholder="Enter room Name">
-            <button id="create">Create Room</button>
-        </div>
-        <!-- Joining a room -->
-        <div class="joinRoom">
-            <input type="roomName" id="joinText" placeholder="Enter room Name">
-            <button id="join">Join Room</button>
+        <h1>Multi-room Chat Application</h1>
+        <div class="settings">
+            <!-- Setting Username -->
+            <div class="usernameGrp">
+                <input type="roomName" id="username" placeholder="Enter username">
+                <button id="setUsername">Set Username</button>
+            </div>
+            <div class="grp">
+                <h2>Room Settings:</h2>
+                <div class="roomGrp">
+                    <!-- Setting Room name -->
+                    <div class="createRoom">
+                        <input type="roomName" id="createText" placeholder="Enter room name">
+                        <button id="create">Create Room</button>
+                    </div>
+                    <!-- Joining a room -->
+                    <div class="joinRoom">
+                        <input type="roomName" id="joinText" placeholder="Enter room name">
+                        <button id="join">Join Room</button>
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 
     <h2>Chat Room</h2>
-    <div class="chatRoom">
+    <div class="chatWrapper">
+        <div class="chatRoom">
+            <p></p>
+        </div>
         <button id="exit" disabled>Exit Group</button>
     </div>
-
-    <input type="text" id="chatText" placeholder="Enter your message">
-    <button id="chat">Send</button>
+    <div class="chatGrp">
+        <input type="text" id="chatText" placeholder="Enter your message">
+        <button id="chat">Send</button>
+    </div>
 
     <script>
         // All the interactions
@@ -114,7 +179,7 @@
                 username: username.value
             }))
         })
-        
+
         exitBtn.addEventListener("click", () => {
             ws.close()
         })
